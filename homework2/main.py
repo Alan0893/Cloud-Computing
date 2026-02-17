@@ -13,7 +13,8 @@ FORBIDDEN_COUNTRIES = ["North Korea", "Iran", "Cuba", "Myanmar", "Iraq", "Libya"
 
 @functions_framework.http
 def handle_request(request):
-    if request.method != 'GET':
+    allowed_methods = ['GET']
+    if request.method not in allowed_methods:
         msg = f"Method {request.method} not implemented"
         print(msg) 
         logger.log_struct({"message": msg, "status": 501}, severity="ERROR")
