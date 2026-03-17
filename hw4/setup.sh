@@ -141,6 +141,7 @@ if ! gcloud compute instances describe "$REPORTER_VM" --zone="$ZONE" --project="
         --service-account="$REPORTER_SA" \
         --scopes=cloud-platform \
         --tags=reporter \
+        --metadata="bucket-name=${BUCKET_NAME}" \
         --metadata-from-file startup-script=service2_startup.sh \
         --quiet
 fi
@@ -167,7 +168,7 @@ if ! gcloud compute instances describe "$SERVER_VM" --zone="$ZONE" --project="$P
         --scopes=cloud-platform \
         --tags=http-server,webserver \
         --address="$STATIC_IP_NAME" \
-        --metadata=service2-url="$SERVICE2_URL" \
+        --metadata="service2-url=${SERVICE2_URL},bucket-name=${BUCKET_NAME}" \
         --metadata-from-file startup-script=startup.sh \
         --quiet
 fi

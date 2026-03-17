@@ -6,9 +6,13 @@ if [ -f /var/log/startup_already_done ]; then
     exit 0
 fi
 
-PROJECT_ID="lateral-shore-485121-i1"
-SERVICE2_URL=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/attributes/service2-url" \
-    -H "Metadata-Flavor: Google" 2>/dev/null || echo "")
+METADATA_URL="http://metadata.google.internal/computeMetadata/v1"
+METADATA_HEADER="Metadata-Flavor: Google"
+
+SERVICE2_URL=$(curl -s "${METADATA_URL}/instance/attributes/service2-url" \
+    -H "${METADATA_HEADER}" 2>/dev/null || echo "")
+BUCKET_NAME=$(curl -s "${METADATA_URL}/instance/attributes/bucket-name" \
+    -H "${METADATA_HEADER}" 2>/dev/null || echo "alan-assign2")
 
 apt-get update -y
 apt-get install -y python3 python3-pip python3-venv git
@@ -21,7 +25,7 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install flask google-cloud-storage google-cloud-pubsub google-cloud-logging requests
 
-gsutil cp gs://alan-assign2/server.py /opt/hw4-server/server.py
+gsutil cp "gs://${BUCKET_NAME}/server.py" /opt/hw4-server/server.py
 
 cat > /etc/systemd/system/hw4-server.service << EOF
 [Unit]

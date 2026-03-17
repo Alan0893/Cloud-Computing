@@ -6,6 +6,12 @@ if [ -f /var/log/startup_already_done ]; then
     exit 0
 fi
 
+METADATA_URL="http://metadata.google.internal/computeMetadata/v1"
+METADATA_HEADER="Metadata-Flavor: Google"
+
+BUCKET_NAME=$(curl -s "${METADATA_URL}/instance/attributes/bucket-name" \
+    -H "${METADATA_HEADER}" 2>/dev/null || echo "alan-assign2")
+
 apt-get update -y
 apt-get install -y python3 python3-pip python3-venv git
 
@@ -17,7 +23,7 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install flask google-cloud-pubsub requests
 
-gsutil cp gs://alan-assign2/service2.py /opt/hw4-service2/service2.py
+gsutil cp "gs://${BUCKET_NAME}/service2.py" /opt/hw4-service2/service2.py
 
 cat > /etc/systemd/system/hw4-service2.service << EOF
 [Unit]
