@@ -1,0 +1,16 @@
+flask>=3.0.0
+google-cloud-storage>=2.14.0
+google-cloud-pubsub>=2.21.0
+google-cloud-logging>=3.10.0
+requests>=2.31.0
+sqlalchemy>=2.0.29
+pg8000>=1.31.2
+flask>=3.0.0
+google-cloud-storage>=2.14.0
+google-cloud-pubsub>=2.21.0
+google-cloud-logging>=3.10.0
+requests>=2.31.0
+cloud-sql-python-connector[pg8000]>=1.9.0
+SQLAlchemy>=2.0.0
+pg8000>=1.31.0
+google-auth>=2.28.0
