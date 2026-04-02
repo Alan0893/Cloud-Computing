@@ -12,6 +12,7 @@ REGION="${REGION:-us-central1}"
 ZONE="${ZONE:-us-central1-a}"
 BUCKET_NAME="${BUCKET_NAME:-alan-assign2}"
 
+# Cloud SQL instance must be MySQL (this HW6 stack is MySQL-only).
 SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-db}"
 SQL_DB_NAME="${SQL_DB_NAME:-hw5db}"
 SQL_DB_USER="${SQL_DB_USER:-hw5user}"
@@ -114,10 +115,10 @@ gcloud compute ssh "$VM_NAME" --zone="$ZONE" --project="$PROJECT_ID" --command "
   pip install -r requirements.txt >/dev/null
   curl -fsSL -o cloud-sql-proxy 'https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.3/cloud-sql-proxy.linux.amd64'
   chmod +x cloud-sql-proxy
-  ./cloud-sql-proxy --address 127.0.0.1 --port 5432 '${DB_CONN_NAME}' > proxy.log 2>&1 &
+  ./cloud-sql-proxy --address 127.0.0.1 --port 3306 '${DB_CONN_NAME}' > proxy.log 2>&1 &
   PROXY_PID=\$!
   for _w in \$(seq 1 20); do sleep 2; grep -q 'Listening' proxy.log 2>/dev/null && break || true; done
-  export DATABASE_URL='postgresql+pg8000://${SQL_DB_USER}:${SQL_DB_PASS}@127.0.0.1:5432/${SQL_DB_NAME}'
+  export DATABASE_URL='mysql+pymysql://${SQL_DB_USER}:${SQL_DB_PASS}@127.0.0.1:3306/${SQL_DB_NAME}'
   export BUCKET_NAME='${BUCKET_NAME}'
   export PROJECT_ID='${PROJECT_ID}'
   export GOOGLE_CLOUD_PROJECT='${PROJECT_ID}'

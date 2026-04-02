@@ -30,25 +30,27 @@ def main():
     ddl = [
         """
         CREATE TABLE IF NOT EXISTS request_logs (
-            id SERIAL PRIMARY KEY,
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             country VARCHAR(128) NOT NULL DEFAULT '',
             client_ip VARCHAR(64) NOT NULL DEFAULT '',
             gender VARCHAR(32) NOT NULL DEFAULT 'Unknown',
-            age INTEGER NULL,
+            age INT NULL,
             income VARCHAR(64) NOT NULL DEFAULT 'Unknown',
-            is_banned BOOLEAN NOT NULL DEFAULT FALSE,
+            is_banned TINYINT(1) NOT NULL DEFAULT 0,
             time_of_day VARCHAR(32) NOT NULL,
             requested_file VARCHAR(256) NOT NULL,
-            request_time TIMESTAMPTZ NOT NULL
-        )
+            request_time DATETIME(6) NOT NULL,
+            PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
         """
         CREATE TABLE IF NOT EXISTS failed_request_logs (
-            id SERIAL PRIMARY KEY,
-            request_time TIMESTAMPTZ NOT NULL,
+            id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            request_time DATETIME(6) NOT NULL,
             requested_file VARCHAR(256) NOT NULL,
-            error_code INTEGER NOT NULL
-        )
+            error_code INT NOT NULL,
+            PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """,
     ]
 
@@ -61,7 +63,7 @@ def main():
                 """
                 SELECT EXISTS (
                     SELECT 1 FROM information_schema.tables
-                    WHERE table_schema='public' AND table_name='request_logs'
+                    WHERE table_schema = DATABASE() AND table_name = 'request_logs'
                 )
                 """
             )
@@ -71,7 +73,7 @@ def main():
                 """
                 SELECT EXISTS (
                     SELECT 1 FROM information_schema.tables
-                    WHERE table_schema='public' AND table_name='failed_request_logs'
+                    WHERE table_schema = DATABASE() AND table_name = 'failed_request_logs'
                 )
                 """
             )

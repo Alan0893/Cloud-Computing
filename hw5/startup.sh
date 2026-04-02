@@ -29,7 +29,7 @@ cd /opt/hw5-server
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install flask google-cloud-storage google-cloud-pubsub google-cloud-logging requests sqlalchemy pg8000
+pip install flask google-cloud-storage google-cloud-pubsub google-cloud-logging requests sqlalchemy pymysql
 
 gsutil cp "gs://${BUCKET_NAME}/hw5/server.py" /opt/hw5-server/server.py
 gsutil cp "gs://${BUCKET_NAME}/hw5/setup_schema.py" /opt/hw5-server/setup_schema.py
@@ -46,7 +46,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/local/bin/cloud-sql-proxy --address 127.0.0.1 --port 5432 ${DB_CONN_NAME}
+ExecStart=/usr/local/bin/cloud-sql-proxy --address 127.0.0.1 --port 3306 ${DB_CONN_NAME}
 Restart=always
 RestartSec=5
 
@@ -68,7 +68,7 @@ Environment="PROJECT_ID=${PROJECT_ID}"
 Environment="TOPIC_ID=forbidden"
 Environment="BUCKET_NAME=${BUCKET_NAME}"
 Environment="SERVICE2_URL=${SERVICE2_URL}"
-Environment="DATABASE_URL=postgresql+pg8000://${DB_USER}:${DB_PASS}@127.0.0.1:5432/${DB_NAME}"
+Environment="DATABASE_URL=mysql+pymysql://${DB_USER}:${DB_PASS}@127.0.0.1:3306/${DB_NAME}"
 Environment="GCE_METADATA_MTLS_MODE=none"
 Environment="NO_PROXY=metadata.google.internal,169.254.169.254,localhost,127.0.0.1"
 ExecStart=/opt/hw5-server/venv/bin/python /opt/hw5-server/server.py
@@ -85,7 +85,7 @@ systemctl daemon-reload
 systemctl enable cloud-sql-proxy
 systemctl start cloud-sql-proxy
 
-DATABASE_URL="postgresql+pg8000://${DB_USER}:${DB_PASS}@127.0.0.1:5432/${DB_NAME}" \
+DATABASE_URL="mysql+pymysql://${DB_USER}:${DB_PASS}@127.0.0.1:3306/${DB_NAME}" \
   /opt/hw5-server/venv/bin/python /opt/hw5-server/setup_schema.py
 
 systemctl enable hw5-server

@@ -26,9 +26,11 @@ def main() -> None:
         for stmt in [s.strip() for s in schema_sql.split(";") if s.strip()]:
             conn.execute(text(stmt))
 
-        # Idempotent migration: reload fact tables each run.
-        conn.execute(text("TRUNCATE TABLE request_events RESTART IDENTITY CASCADE"))
-        conn.execute(text("TRUNCATE TABLE failed_request_events RESTART IDENTITY"))
+        # Idempotent migration: reload fact tables each run (MySQL).
+        conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
+        conn.execute(text("TRUNCATE TABLE request_events"))
+        conn.execute(text("TRUNCATE TABLE failed_request_events"))
+        conn.execute(text("SET FOREIGN_KEY_CHECKS=1"))
 
         for stmt in [s.strip() for s in migrate_sql.split(";") if s.strip()]:
             conn.execute(text(stmt))
