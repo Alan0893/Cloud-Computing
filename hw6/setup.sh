@@ -12,8 +12,7 @@ REGION="${REGION:-us-central1}"
 ZONE="${ZONE:-us-central1-a}"
 BUCKET_NAME="${BUCKET_NAME:-alan-assign2}"
 
-# Cloud SQL instance must be MySQL (this HW6 stack is MySQL-only).
-SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-db}"
+SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-mysql}"
 SQL_DB_NAME="${SQL_DB_NAME:-hw5db}"
 SQL_DB_USER="${SQL_DB_USER:-hw5user}"
 SQL_DB_PASS="${SQL_DB_PASS:-hw5pass}"

@@ -10,7 +10,7 @@ import google.auth
 from googleapiclient import discovery
 
 PROJECT_ID = os.environ.get("PROJECT_ID", "lateral-shore-485121-i1")
-INSTANCE_NAME = os.environ.get("INSTANCE_NAME", "hw5-db")
+INSTANCE_NAME = os.environ.get("INSTANCE_NAME", "hw5-mysql")
 
 
 @functions_framework.http
@@ -47,7 +47,3 @@ def stop_database_if_running(request):
     msg = f"No action needed for '{INSTANCE_NAME}' (state={state}, policy={policy})."
     print(msg)
     return msg, 200
-"""
-Cloud Function: stop-database-if-running
-Triggered every hour by Cloud Scheduler (via HTTP).
-"""

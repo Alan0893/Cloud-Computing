@@ -18,10 +18,12 @@ STATIC_IP_NAME="${STATIC_IP_NAME:-hw5-server-ip}"
 TOPIC_ID="${TOPIC_ID:-forbidden}"
 SUBSCRIPTION_ID="${SUBSCRIPTION_ID:-forbidden-sub}"
 
-SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-db}"
+# MySQL 8 instance name. Older "hw5-db" in GCP may still be PostgreSQL—leave it or delete it separately.
+SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-mysql}"
 SQL_TIER="${SQL_TIER:-db-g1-small}"
 SQL_REGION="${SQL_REGION:-$REGION}"
-SQL_DB_VERSION="${SQL_DB_VERSION:-POSTGRES_15}"
+# HW5/HW6 application code targets MySQL 8 (Cloud SQL).
+SQL_DB_VERSION="${SQL_DB_VERSION:-MYSQL_8_0}"
 SQL_DB_NAME="${SQL_DB_NAME:-hw5db}"
 SQL_DB_USER="${SQL_DB_USER:-hw5user}"
 SQL_DB_PASS="${SQL_DB_PASS:-hw5pass}"

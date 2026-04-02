@@ -9,7 +9,7 @@ ZONE="${ZONE:-us-central1-a}"
 
 SERVER_VM="${SERVER_VM:-hw5-server}"
 REPORTER_VM="${REPORTER_VM:-hw5-reporter}"
-SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-db}"
+SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-mysql}"
 STATIC_IP_NAME="${STATIC_IP_NAME:-hw5-server-ip}"
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }

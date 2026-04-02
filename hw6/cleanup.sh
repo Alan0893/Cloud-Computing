@@ -6,7 +6,7 @@ set -euo pipefail
 PROJECT_ID="${PROJECT_ID:-lateral-shore-485121-i1}"
 REGION="${REGION:-us-central1}"
 ZONE="${ZONE:-us-central1-a}"
-SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-db}"
+SQL_INSTANCE_NAME="${SQL_INSTANCE_NAME:-hw5-mysql}"
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
