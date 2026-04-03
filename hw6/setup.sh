@@ -26,6 +26,7 @@ REMOTE_DIR="/opt/hw6"
 REMOTE_STAGING="~/hw6_staging"
 OUTPUT_PREFIX="hw6_outputs"
 BUCKET_PREFIX="hw6/model_outputs"
+# Local training without Cloud SQL: python3 train_models.py --demo --bucket-name "$BUCKET_NAME"
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
@@ -52,6 +53,12 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:${VM_SA}" \
   --role="roles/cloudsql.client" \
   --quiet >/dev/null
+
+log "Ensuring GCS output prefix gs://${BUCKET_NAME}/${BUCKET_PREFIX}/ exists..."
+MARKER="gs://${BUCKET_NAME}/${BUCKET_PREFIX}/.hw6_prefix"
+if ! gsutil -q stat "$MARKER" 2>/dev/null; then
+  printf '%s\n' "HW6 model output prefix (auto-created)." | gsutil cp - "$MARKER"
+fi
 
 log "Starting Cloud SQL instance..."
 gcloud sql instances patch "$SQL_INSTANCE_NAME" --project="$PROJECT_ID" --activation-policy=ALWAYS --quiet >/dev/null
@@ -88,7 +95,7 @@ done
 log "Preparing VM staging directory..."
 gcloud compute ssh "$VM_NAME" --zone="$ZONE" --project="$PROJECT_ID" --command "mkdir -p ${REMOTE_STAGING}" >/dev/null
 
-log "Copying HW6 files to VM..."
+log "Copying HW6 files to VM (train_models uploads test-set CSVs + metrics to gs://${BUCKET_NAME}/${BUCKET_PREFIX} via GCS API)..."
 gcloud compute scp \
   "${HW6_DIR}/requirements.txt" \
   "${HW6_DIR}/schema_3nf.sql" \
@@ -116,7 +123,7 @@ gcloud compute ssh "$VM_NAME" --zone="$ZONE" --project="$PROJECT_ID" --command "
   chmod +x cloud-sql-proxy
   ./cloud-sql-proxy --address 127.0.0.1 --port 3306 '${DB_CONN_NAME}' > proxy.log 2>&1 &
   PROXY_PID=\$!
-  for _w in \$(seq 1 20); do sleep 2; grep -q 'Listening' proxy.log 2>/dev/null && break || true; done
+  for _w in \$(seq 1 30); do sleep 2; grep -qE 'Listening|ready for new connections' proxy.log 2>/dev/null && break || true; done
   export DATABASE_URL='mysql+pymysql://${SQL_DB_USER}:${SQL_DB_PASS}@127.0.0.1:3306/${SQL_DB_NAME}'
   export BUCKET_NAME='${BUCKET_NAME}'
   export PROJECT_ID='${PROJECT_ID}'

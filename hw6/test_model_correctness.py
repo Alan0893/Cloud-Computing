@@ -147,13 +147,17 @@ def test_country_model() -> None:
             f"predicted={pred_countries - known_countries} not in training",
         )
 
-        # 6. Test set isolation — no row in output was used for training
-        #    Re-run split with same seed and confirm output indices match test
-        _, test_split = train_test_split(df[["client_ip", "country"]], test_size=0.2, random_state=42)
+        # 6. Test set size matches within-IP split (same logic as train_country_model)
+        expected_test = 0
+        for _, g in df.groupby("client_ip", sort=False):
+            if len(g) < 2:
+                continue
+            _, te = train_test_split(g, test_size=0.2, random_state=42)
+            expected_test += len(te)
         check(
-            "Test set row count matches train_test_split(seed=42)",
-            len(pred_df) == len(test_split),
-            f"{len(pred_df)} vs {len(test_split)}",
+            "Test set row count matches within-IP split (seed=42)",
+            len(pred_df) == expected_test,
+            f"{len(pred_df)} vs {expected_test}",
         )
 
         # 7. Accuracy matches reported value
