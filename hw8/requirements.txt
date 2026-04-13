@@ -1,0 +1,5 @@
+flask
+google-cloud-logging
+google-cloud-pubsub
+google-cloud-storage
+requests
