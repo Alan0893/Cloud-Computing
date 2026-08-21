@@ -2,9 +2,6 @@
 
 Coursework for Boston University CS 528. Each `hw*` directory is a standalone assignment, mostly on Google Cloud (GCS, Compute Engine, Cloud Functions, Pub/Sub, Cloud SQL, Dataflow, load balancing, GKE).
 
-Email: alanl193@bu.edu  
-BUID: U62043672
-
 ## Homework
 
 | Directory | What it did |
