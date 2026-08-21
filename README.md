@@ -1,4 +1,4 @@
-# CS 528 — Cloud Computing
+# Cloud Computing
 
 Coursework for Boston University CS 528. Each `hw*` directory is a standalone assignment, mostly on Google Cloud (GCS, Compute Engine, Cloud Functions, Pub/Sub, Cloud SQL, Dataflow, load balancing, GKE).
 
